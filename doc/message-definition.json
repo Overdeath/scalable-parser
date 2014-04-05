@@ -1,0 +1,102 @@
+/*
+* JSON message structure for initiation a job
+* Most of the fields should also be overwriteable
+* from the consumer
+*/
+
+{
+	"id": 123, // MANDATORY, a unique id of the job to be processed
+	"target": {
+		"url": "http://url.com/catery/12", //MANDATORY, the url to be processed
+		"id": 1, //MANDATORY, the unique id of the target
+		"name": "big retailer", //OPTIONAL if the target exists, the name of the target
+		"parent-url": "http://url.com", // OPTIONAL, the parent url of the target
+	},
+	//the rules should be sent only when something changes
+	"rules": {
+		//this will be used to detect if the page parsed is a single item or multiple (eg. category)	
+		// the example below issues a $('.pagination').length and checks if it equals 0 (no pagination on page)
+		"single-detector": {
+			"selector": {
+				"name": ".pagination", //the css selector to look for
+				"method": "length" //the method to be called on the selector
+			},
+			"compare-exact": 0
+		},
+
+		// if set to true on a multiple page it will follow each products link and use the selectors from single
+		"follow-single": false,
+
+		//key value of the data to fetch from page 
+		"info": {
+			//we have at least 2 contexts (multiple when category and single when parsing a single page)
+			"multiple": {
+				"container": {
+					"selector": { "name": ".product_list" } //MANDATORY, used to first determine the space of the item to be parsed
+				},
+				//holds logic about the pagination
+				"pagination": {
+					"selector": {
+						"name": "#pagination a", //the css selector to look for
+						"attr": "href"
+					},
+					"replace": [
+						{"regex": "(/\\s{2,}/g", "with": " "},
+					],
+					"append-final-slash" : false,
+					"type": {
+						"is_relative": true,
+						"relative_to": "target-url", // relative to main site domain
+						"relative_to": "multiple", // relative to the multiple page that initiated the job
+						
+						"dynamic": true, // this will find the maximum page number using the selector
+						"dynamic-append": "/page/$1" // this will be added to the job initiator until the limit is reached
+
+					}	
+				},
+
+				"title": {
+					"selector": {
+						"name": ".title", //the css selector to look for
+						"method": "text" //the method to be called on the selector
+					},
+					//the elements matching the selectors below will be removed from the selector in the top
+					"remove": ["span.special_price", ".discount_ribbon"],
+					//array of replace to be called in order on the matched result
+					"replace": [
+						{"regex": "(/\\s{2,}/g", "with": " "},
+						{"regex": "(/\\s{2,}/g", "with": " "},
+					]
+				},
+				"link": {
+					"selector": {
+						"name": ".title a", //the css selector to look for
+						"attr": "href" //the attribute to get from the matched element
+					},
+					//array of replace to be called in order on the matched result
+					"replace": [
+						{"regex": "(/\\s{2,}/g", "with": " "},
+						{"regex": "(/\\s{2,}/g", "with": " "},
+					]
+				}
+			},
+
+			//single context selectors
+			"single": {
+				"title": {
+					//if no method is specified text is used
+					"selector": {
+						"name": "h1" //the css selector to look for
+					},
+				},
+				"link": {
+					"selector": {
+						"name": ".title a", //the css selector to look for
+						"attr": "href" //the attribute to get from the matched element
+					},
+				}
+			} 
+
+		}
+	}
+}

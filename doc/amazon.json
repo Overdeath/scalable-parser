@@ -1,0 +1,70 @@
+{
+	"id": 1,
+	"target": {
+		"url": "http://www.amazon.com/s/ref=amb_link_357131882_16?ie=UTF8&bbn=565108&rh=i%3Acomputers%2Cn%3A172282%2Cn%3A!493964%2Cn%3A541966%2Cn%3A565108%2Cp_n_size_browse-bin%3A3545275011%7C2423840011%7C2423841011%7C2242801011%7C3545276011&pf_rd_m=ATVPDKIKX0DER&pf_rd_s=merchandised-search-leftnav&pf_rd_r=10D8CFWS61CPRYTEBYG3&pf_rd_t=101&pf_rd_p=1754187802&pf_rd_i=565108",
+		"id": 1,
+		"name": "Amazon",
+		"parent-url": "http://www.amazon.com"
+	},
+	"rules": {
+		"single-detector": {
+			"selector": {
+				"name": "#pagn .pagnLink a", 
+				"method": "length"
+			},
+			"compare-exact": 0
+		},
+		"follow-single": false,
+		"info": {
+			"multiple": {
+				"pagination": {
+					"selector": {
+						"name": "#pagn .pagnLink a",
+						"attr": "href"
+					},
+					
+					"append-final-slash" : false,
+					"type": {
+						"is_relative": true,
+						"relative_to": "target-url"
+					}	
+				},
+
+				"container": {
+					"selector": { "name": ".prod" }
+				},
+
+				"title": {
+					"selector": {
+						"name": "h3.newaps span",
+						"attr": "title"
+					}
+				},
+				"link": {
+					"selector": {
+						"name": "h3.newaps a",
+						"attr": "href"
+					}
+				},
+				"price": {
+					"selector": {
+						"name": "li.newp span lrg"
+					}
+				}
+			},
+			"single": {
+				"title": {
+					"selector": {
+						"name": "#productTitle"
+					}
+				},
+				"price": {
+					"selector": {
+						"name": "#priceblock_ourprice"
+					}
+				}
+			} 
+
+		}
+	}
+}
