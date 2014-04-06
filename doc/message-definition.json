@@ -10,22 +10,22 @@
 		"url": "http://url.com/catery/12", //MANDATORY, the url to be processed
 		"id": 1, //MANDATORY, the unique id of the target
 		"name": "big retailer", //OPTIONAL if the target exists, the name of the target
-		"parent-url": "http://url.com", // OPTIONAL, the parent url of the target
+		"parentUrl": "http://url.com", // OPTIONAL, the parent url of the target
 	},
 	//the rules should be sent only when something changes
 	"rules": {
 		//this will be used to detect if the page parsed is a single item or multiple (eg. category)	
 		// the example below issues a $('.pagination').length and checks if it equals 0 (no pagination on page)
-		"single-detector": {
+		"singleDetector": {
 			"selector": {
 				"name": ".pagination", //the css selector to look for
 				"method": "length" //the method to be called on the selector
 			},
-			"compare-exact": 0
+			"compareExact": 0
 		},
 
 		// if set to true on a multiple page it will follow each products link and use the selectors from single
-		"follow-single": false,
+		"followSingle": false,
 
 		//key value of the data to fetch from page 
 		"info": {
@@ -43,14 +43,14 @@
 					"replace": [
 						{"regex": "(/\\s{2,}/g", "with": " "},
 					],
-					"append-final-slash" : false,
+					"appendFinalSlash" : false,
 					"type": {
-						"is_relative": true,
-						"relative_to": "target-url", // relative to main site domain
-						"relative_to": "multiple", // relative to the multiple page that initiated the job
+						"isRelative": true,
+						"relativeTo": "target-url", // relative to main site domain
+						"relativeTo": "multiple", // relative to the multiple page that initiated the job
 						
 						"dynamic": true, // this will find the maximum page number using the selector
-						"dynamic-append": "/page/$1" // this will be added to the job initiator until the limit is reached
+						"dynamicAppend": "/page/$1" // this will be added to the job initiator until the limit is reached
 
 					}	
 				},
